@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ```
 
 ### 2. Get API Key
-- Visit [Google AI Studio](https://aistudio.google.com/apikey)
+- Visit [Groq](https://console.groq.com/keys)
 - Generate a free API key
 - You can enter it directly in the app sidebar
 
