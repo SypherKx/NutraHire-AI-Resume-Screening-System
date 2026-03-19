@@ -279,12 +279,6 @@
         </div>
 
         <hr style="border: 1px solid #30363d; width: 100%;">
-        
-        <div>
-            <h3>🔑 API Settings</h3>
-            <label>Groq API Key (Optional if set in .env)</label>
-            <input type="password" id="api-key" placeholder="gsk_xxxxx...">
-        </div>
 
         <button class="btn-screen" id="btn-screen">🚀 Screen Resumes</button>
     </div>
@@ -344,7 +338,6 @@
         const fileLabel = document.getElementById('file-label');
         const btnScreen = document.getElementById('btn-screen');
         const jdInput = document.getElementById('job-description');
-        const apiKeyInput = document.getElementById('api-key');
         
         fileInput.addEventListener('change', () => {
             const num = fileInput.files.length;
@@ -376,7 +369,6 @@
             if (fileInput.files.length === 0) return alert("⚠️ Please upload at least 1 PDF file.");
             
             formData.append("job_description", jd);
-            if (apiKeyInput.value.trim()) formData.append("api_key", apiKeyInput.value.trim());
             
             for(let i=0; i<fileInput.files.length; i++) {
                 formData.append("resumes", fileInput.files[i]);
