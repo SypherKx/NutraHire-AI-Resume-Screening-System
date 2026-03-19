@@ -276,6 +276,7 @@
                 <span id="file-label">Click to select PDF files (Max 10)</span>
                 <input type="file" id="resume-files" multiple accept=".pdf" style="display: none;">
             </label>
+            <div id="file-list-container" style="margin-top: 10px; max-height: 250px; overflow-y: auto;"></div>
         </div>
 
         <hr style="border: 1px solid #30363d; width: 100%;">
@@ -339,16 +340,47 @@
         const btnScreen = document.getElementById('btn-screen');
         const jdInput = document.getElementById('job-description');
         
-        fileInput.addEventListener('change', () => {
-            const num = fileInput.files.length;
+        let selectedFiles = [];
+
+        fileInput.addEventListener('change', (e) => {
+            for(let i=0; i<e.target.files.length; i++) {
+                if (selectedFiles.length < 10) {
+                    if(!selectedFiles.some(f => f.name === e.target.files[i].name)) {
+                        selectedFiles.push(e.target.files[i]);
+                    }
+                } else {
+                    alert("⚠️ Maximum 10 resumes allowed.");
+                    break;
+                }
+            }
+            fileInput.value = ""; 
+            updateFileUI();
+        });
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileUI();
+        }
+
+        function updateFileUI() {
+            const num = selectedFiles.length;
+            const container = document.getElementById('file-list-container');
             if (num > 0) {
-                fileLabel.innerHTML = `<strong>✅ ${num} file(s) selected</strong>`;
+                fileLabel.innerHTML = `<strong>✅ ${num} file(s) added</strong><br><small style="color:#8b949e">Click to add more (Max 10)</small>`;
                 fileLabel.style.color = "#3fb950";
+                
+                container.innerHTML = selectedFiles.map((f, i) => `
+                    <div style="display:flex; justify-content:space-between; background:#161b22; padding:8px 12px; margin-top:8px; border-radius:6px; border:1px solid #30363d; font-size:0.85rem;">
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#c9d1d9;">📄 ${f.name}</span>
+                        <span style="color:#f85149; cursor:pointer; font-weight:bold; margin-left:10px;" onclick="removeFile(${i})">✖</span>
+                    </div>
+                `).join('');
             } else {
                 fileLabel.innerHTML = "Click to select PDF files (Max 10)";
                 fileLabel.style.color = "#e6edf3";
+                container.innerHTML = "";
             }
-        });
+        }
 
         function getScoreClass(score) {
             if (score >= 80) return "score-high";
@@ -366,12 +398,12 @@
             
             const jd = jdInput.value.trim();
             if (!jd) return alert("⚠️ Please paste a job description.");
-            if (fileInput.files.length === 0) return alert("⚠️ Please upload at least 1 PDF file.");
+            if (selectedFiles.length === 0) return alert("⚠️ Please upload at least 1 PDF file.");
             
             formData.append("job_description", jd);
             
-            for(let i=0; i<fileInput.files.length; i++) {
-                formData.append("resumes", fileInput.files[i]);
+            for(let i=0; i<selectedFiles.length; i++) {
+                formData.append("resumes", selectedFiles[i]);
             }
 
             document.getElementById('welcome-state').style.display = 'none';
