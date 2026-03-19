@@ -1,15 +1,14 @@
-# AI Resume Screening System
+# AI Resume Screening System - TalentBay
 
-An AI-powered resume screening tool that evaluates multiple resumes against a job description and produces structured, ranked candidate assessments.
+An AI-powered resume screening platform that evaluates multiple resumes against a job description in seconds and produces structured, ranked candidate assessments.
 
 ## Features
 
-- **Smart Resume Parsing** — Extracts text from PDF resumes automatically
-- **AI-Powered Analysis** — Uses Google Gemini to evaluate each resume against the JD
-- **Structured Output** — Match score (0–100), key strengths, key gaps, and recommendation
-- **Candidate Ranking** — Candidates sorted by match score (highest first)
-- **CSV Export** — Download results as a spreadsheet
-- **Modern UI** — Clean, professional dark-themed interface
+- **Smart Resume Parsing** — Extracts text from PDF resumes automatically using `PyPDF2`.
+- **Ultra-Fast AI Analysis** — Uses **Groq API (Llama-3.3-70b-versatile)** to evaluate each resume against the JD, ensuring near-instant results.
+- **Structured Output** — Provides a Match Score (0–100), 3 Key Strengths, 3 Key Gaps, and a final Recommendation.
+- **Candidate Ranking** — Candidates are dynamically sorted by match score (highest first).
+- **Vercel-Ready Architecture** — Built with a serverless Python Flask backend and a responsive Vanilla HTML/CSS/JS frontend replicating a premium dark UI.
 
 ## Output Format
 
@@ -21,76 +20,58 @@ An AI-powered resume screening tool that evaluates multiple resumes against a jo
 
 ## Tech Stack
 
-- **Python** — Core language
-- **Streamlit** — Web application framework
-- **Groq API** — LLM for resume analysis
-- **PyPDF2** — PDF text extraction
-- **pandas** — Data handling and CSV export
+- **Frontend** — HTML5, CSS3 (Custom Premium Dark Theme), Vanilla JS
+- **Backend Framework** — Python 3, Flask (Vercel Serverless Functions)
+- **AI / LLM** — Groq API (Llama 3.3 70B Model)
+- **PDF Processing** — PyPDF2
 
-## Setup & Run
+## Setup & Run Locally
 
 ### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Get API Key
-- Visit [Groq](https://console.groq.com/keys)
-- Generate a free API key
-- You can enter it directly in the app sidebar
+### 2. Configure API Key
+Create a `.env` file in the root directory and add your Groq API key:
+```env
+GROQ_API_KEY=gsk_your_api_key_here
+```
 
-### 3. Run the App
+### 3. Run the Servers
+Since this app separates the backend and frontend:
+
+**Terminal 1 (Backend API):**
 ```bash
-streamlit run app.py
+python api/index.py
+# Server will run on http://127.0.0.1:5000
+```
+
+**Terminal 2 (Frontend UI):**
+```bash
+python -m http.server 8505
+# Open your browser and go to http://localhost:8505
 ```
 
 ### 4. Use the App
-1. Paste your **API key** in the sidebar
-2. Paste the **Job Description**
-3. Upload **resume PDFs** (up to 10)
-4. Click **Screen Resumes**
-5. View ranked results and download CSV
+1. Paste the **Job Description** in the sidebar.
+2. Upload **resume PDFs** (you can accumulate up to 10 files before screening).
+3. Click **Screen Resumes**.
+4. View ranked results, scores, and individual analysis cards.
 
-## Sample Data
+## Deployment on Vercel
+This repository is configured out-of-the-box for deployment on **Vercel**.
+1. Import the repository in Vercel.
+2. Vercel will auto-detect the `vercel.json` routing configuration.
+3. Add your `GROQ_API_KEY` to Vercel's Environment Variables.
+4. Hit Deploy!
 
-The `sample_data/` folder contains:
-- `job_description.txt` — A Data Analyst JD for testing
-- 5 sample resume PDFs with varying skill levels
-
-To regenerate sample data:
+## Sample Data (Testing Edge-Cases)
+The `sample_data/` folder contains a `job_description.txt` and 5 custom-tailored sample resumes to quickly test the application's ranking accuracy without hunting for real resumes.
+You can regenerate or modify them via:
 ```bash
 python generate_samples.py
 ```
-
-## Project Structure
-
-```
-Resume Tracker/
-├── app.py                  # Main Streamlit application
-├── resume_parser.py        # PDF text extraction module
-├── screening_engine.py     # AI analysis engine (Gemini)
-├── generate_samples.py     # Sample data generator
-├── requirements.txt        # Python dependencies
-├── .env                    # API key (gitignored)
-├── .gitignore
-├── README.md
-└── sample_data/
-    ├── job_description.txt
-    ├── resume_ananya_sharma.pdf
-    ├── resume_rahul_verma.pdf
-    ├── resume_priya_patel.pdf
-    ├── resume_vikram_singh.pdf
-    └── resume_meera_joshi.pdf
-```
-
-## How It Works
-
-1. **Input**: User provides a Job Description + uploads resume PDFs
-2. **Parse**: PyPDF2 extracts text from each PDF
-3. **Analyze**: Each resume is sent to Google Gemini with the JD for evaluation
-4. **Score**: AI returns a structured JSON with score, strengths, gaps, and recommendation
-5. **Rank**: Candidates are sorted by match score
-6. **Output**: Results displayed in a ranked table with export option
 
 ## Scoring Criteria
 
