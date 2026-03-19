@@ -353,20 +353,20 @@ if "results" not in st.session_state:
     st.session_state.results = None
 
 if screen_btn:
-        if not job_description.strip():
+    if not job_description.strip():
         st.error("⚠️ Please paste a job description in the sidebar.")
     elif not uploaded_files:
         st.error("⚠️ Please upload at least one resume PDF.")
     elif not GROQ_API_KEY:
         st.error("⚠️ API key not found. Please add your Groq API key to the .env file.")
     else:
-                try:
+        try:
             configure_groq(GROQ_API_KEY)
         except ValueError as e:
             st.error(f"⚠️ API Key Error: {str(e)}")
             st.stop()
         
-                results = []
+        results = []
         progress_bar = st.progress(0, text="Initializing AI screening engine...")
         status_container = st.empty()
         
@@ -374,7 +374,7 @@ if screen_btn:
             progress = (i) / len(uploaded_files)
             progress_bar.progress(progress, text=f"📄 Analyzing resume {i+1}/{len(uploaded_files)}: {file.name}")
             
-                        status_container.info(f"🔍 Extracting text from **{file.name}**...")
+            status_container.info(f"🔍 Extracting text from **{file.name}**...")
             resume_text = extract_text_from_pdf(file)
             
             if resume_text.startswith("[Error"):
@@ -387,7 +387,7 @@ if screen_btn:
                 })
                 continue
             
-                        status_container.info(f"🤖 AI is evaluating **{file.name}** against the job description...")
+            status_container.info(f"🤖 AI is evaluating **{file.name}** against the job description...")
             result = analyze_resume(resume_text, job_description)
             result["file_name"] = file.name
             results.append(result)
@@ -397,7 +397,7 @@ if screen_btn:
         progress_bar.progress(1.0, text="✅ Screening complete!")
         status_container.empty()
         
-                ranked_results = rank_candidates(results)
+        ranked_results = rank_candidates(results)
         st.session_state.results = ranked_results
         
         time.sleep(0.5)
@@ -407,7 +407,7 @@ if screen_btn:
 if st.session_state.results:
     results = st.session_state.results
     
-        total = len(results)
+    total = len(results)
     avg_score = sum(r["match_score"] for r in results) / total if total > 0 else 0
     strong_fits = sum(1 for r in results if r["recommendation"] == "Strong Fit")
     moderate_fits = sum(1 for r in results if r["recommendation"] == "Moderate Fit")
@@ -433,7 +433,7 @@ if st.session_state.results:
     </div>
     """, unsafe_allow_html=True)
     
-        st.markdown("### 📊 Candidate Rankings")
+    st.markdown("### 📊 Candidate Rankings")
     
     def get_score_class(score):
         if score >= 80: return "score-high"
@@ -445,7 +445,7 @@ if st.session_state.results:
         if rec == "Moderate Fit": return "rec-moderate"
         return "rec-not"
     
-        table_html = """<table class="results-table">
+    table_html = """<table class="results-table">
     <thead>
         <tr>
             <th>Rank</th>
@@ -475,7 +475,7 @@ if st.session_state.results:
     table_html += "</tbody></table>"
     st.markdown(table_html, unsafe_allow_html=True)
     
-        st.markdown("### 🔎 Detailed Analysis")
+    st.markdown("### 🔎 Detailed Analysis")
     
     for r in results:
         strengths_items = "".join([f"<li>{s}</li>" for s in r.get("strengths", [])])
@@ -500,7 +500,7 @@ if st.session_state.results:
         </div>
         """, unsafe_allow_html=True)
     
-        st.markdown("---")
+    st.markdown("---")
     
     export_data = []
     for r in results:
@@ -527,7 +527,7 @@ if st.session_state.results:
         )
 
 else:
-        st.markdown("""
+    st.markdown("""
     <div style="text-align: center; padding: 3rem 1rem; color: #8b949e;">
         <div style="font-size: 4rem; margin-bottom: 1rem;">📄 → 🤖 → 📊</div>
         <h3 style="color: #e6edf3; font-weight: 600;">Ready to Screen Candidates</h3>
