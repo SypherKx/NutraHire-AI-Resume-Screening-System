@@ -1,0 +1,13 @@
+{
+  "name": "nutrahire-ai-resume-screening",
+  "version": "1.0.0",
+  "description": "NutraHire AI Resume Screening System",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build step required for vanilla HTML project'"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "private": true,
+  "note": "This project uses Vercel Web Analytics via CDN (https://cdn.vercel-insights.com/v1/script.js) - no npm package required"
+}
