@@ -1,0 +1,33 @@
+Data Analyst - Job Description
+
+Company: TechNova Solutions
+Location: Bangalore, India (Hybrid)
+Experience: 2-4 years
+
+Role Overview:
+We are looking for a skilled Data Analyst to join our analytics team. The ideal candidate will transform raw data into actionable insights.
+
+Key Responsibilities:
+- Analyze large datasets using SQL and Python to identify trends
+- Build interactive dashboards using Tableau or Power BI
+- Collaborate with product and engineering teams to define KPIs
+- Perform A/B testing analysis and statistical modeling
+- Clean, validate, and preprocess data from multiple sources
+- Present findings to stakeholders through clear visualizations
+
+Required Skills:
+- Strong proficiency in SQL (complex queries, joins, window functions)
+- Python programming (pandas, numpy, matplotlib/seaborn)
+- Experience with Tableau or Power BI
+- Understanding of statistics and probability
+- Experience with A/B testing methodologies
+- Strong communication and presentation skills
+
+Preferred Skills:
+- Experience with cloud platforms (AWS/GCP)
+- Knowledge of machine learning basics
+- Experience with Excel/Google Sheets
+- Familiarity with Git version control
+
+Education:
+Bachelor's degree in CS, Statistics, Mathematics, or related field

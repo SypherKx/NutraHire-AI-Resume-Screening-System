@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <defs>
+        <linearGradient id="nh-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#161b22" />
+            <stop offset="100%" stop-color="#111111" />
+        </linearGradient>
+        <linearGradient id="text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#58a6ff" />
+            <stop offset="100%" stop-color="#3fb950" />
+        </linearGradient>
+    </defs>
+    <!-- Background -->
+    <rect width="100" height="100" rx="24" fill="url(#nh-grad)" stroke="#30363d" stroke-width="4" />
+    <!-- Text NH -->
+    <text x="50" y="65" font-family="Arial, sans-serif" font-size="48" font-weight="900" fill="url(#text-grad)" text-anchor="middle">NH</text>
+</svg>

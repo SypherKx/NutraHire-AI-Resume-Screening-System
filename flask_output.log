@@ -1,0 +1,13 @@
+ * Serving Flask app 'index'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 575-782-552
+127.0.0.1 - - [29/Mar/2026 22:02:14] "POST /api/screen HTTP/1.1" 400 -
+ * Detected change in 'C:\\Users\\itska\\OneDrive\\Desktop\\NutraHire-AI-Resume-Screening-System-main\\NutraHire-AI-Resume-Screening-System-main\\generate_samples.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 575-782-552

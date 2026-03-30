@@ -1,0 +1,6 @@
+::1 - - [29/Mar/2026 21:59:51] "GET / HTTP/1.1" 200 -
+::1 - - [29/Mar/2026 21:59:51] code 404, message File not found
+::1 - - [29/Mar/2026 21:59:51] "GET /_vercel/insights/script.js HTTP/1.1" 404 -
+::1 - - [29/Mar/2026 21:59:52] "GET /favicon.svg HTTP/1.1" 200 -
+::1 - - [29/Mar/2026 22:01:16] "GET / HTTP/1.1" 304 -
+::1 - - [29/Mar/2026 22:04:57] "GET / HTTP/1.1" 304 -

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutraHire AI</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111111;
+            color: #e6edf3;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            background: #111111;
+            border-right: 1px solid #30363d;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .sidebar h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar label {
+            font-size: 0.9rem;
+            color: #e6edf3;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .sidebar textarea, .sidebar input[type="password"] {
+            width: 100%;
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #e6edf3;
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .sidebar textarea:focus, .sidebar input[type="password"]:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .sidebar .file-upload {
+            border: 2px dashed #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar .file-upload:hover { border-color: #58a6ff; }
+        
+        .btn-screen {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-screen:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(35, 134, 54, 0.5);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem 4rem;
+            overflow-y: auto;
+        }
+
+        .hero-header {
+            background: linear-gradient(135deg, #1a1a1a, #1e2028, #111111);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(48, 54, 61, 0.8);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .hero-header h1 {
+            color: #e6edf3;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .hero-header .accent {
+            background: linear-gradient(90deg, #58a6ff, #3fb950, #58a6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-header p {
+            color: #8b949e;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 400;
+        }
+
+        /* Metric Cards */
+        .metrics-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric-card {
+            flex: 1;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .metric-card .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #58a6ff;
+        }
+        .metric-card .metric-label {
+            font-size: 0.8rem;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.3);
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+        .results-table thead th {
+            background: #161b22;
+            color: #8b949e;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #30363d;
+        }
+        .results-table td {
+            padding: 16px 16px;
+            color: #e6edf3;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #21262d;
+            vertical-align: top;
+            background: rgba(17, 17, 17, 0.8);
+        }
+        .results-table tbody tr:nth-child(even) td { background: rgba(22, 27, 34, 0.6); }
+
+        /* Badges */
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .score-high { background: rgba(63, 185, 80, 0.12); color: #3fb950; border: 2px solid rgba(63, 185, 80, 0.4); }
+        .score-mid { background: rgba(210, 153, 34, 0.12); color: #d29922; border: 2px solid rgba(210, 153, 34, 0.4); }
+        .score-low { background: rgba(248, 81, 73, 0.12); color: #f85149; border: 2px solid rgba(248, 81, 73, 0.4); }
+
+        .rec-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .rec-strong { background: rgba(63, 185, 80, 0.12); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); }
+        .rec-moderate { background: rgba(210, 153, 34, 0.12); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
+        .rec-not { background: rgba(248, 81, 73, 0.12); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.3); }
+
+        .rank-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(88, 166, 255, 0.12);
+            color: #58a6ff;
+            font-weight: 800;
+            font-size: 0.95rem;
+            border: 1px solid rgba(88, 166, 255, 0.25);
+        }
+
+        /* Detail Cards */
+        .detail-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.25);
+        }
+        .detail-card h3 { color: #e6edf3; font-size: 1.1rem; margin: 0 0 1rem 0; display: flex; align-items: center; }
+        .detail-row { display: flex; gap: 2rem; }
+        .detail-col { flex: 1; }
+        .detail-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
+        .strength-label { color: #3fb950; }
+        .gap-label { color: #f85149; }
+        .detail-card ul { list-style: none; padding: 0; margin: 0; }
+        .detail-card ul li { color: #c9d1d9; font-size: 0.88rem; position: relative; line-height: 1.5; }
+        
+        .detail-card ul.strengths li { padding: 4px 0 4px 24px; }
+        .detail-card ul.strengths li::before { 
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233fb950" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'); 
+            position: absolute; left: 0; top: 6px; 
+        }
+        .detail-card ul.gaps li { padding: 4px 0 4px 24px; }
+        .detail-card ul.gaps li::before { 
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23f85149" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'); 
+            position: absolute; left: 0; top: 6px; 
+        }
+
+        /* Loader */
+        .loader-container { display: none; text-align: center; padding: 4rem; }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #58a6ff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 1.5rem auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Welcome Message */
+        .welcome-state { text-align: center; padding: 4rem 1rem; color: #8b949e; display: block; }
+        .flow-icons { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 2rem; color: #58a6ff; }
+        
+        .footer { text-align: center; padding: 2rem 0; color: #4b5563; font-size: 0.8rem; }
+        
+        #error-msg { color: #f85149; margin-top: 1rem; display: none; font-weight: 500; font-size: 0.95rem; line-height: 1.5; padding: 1rem; background: rgba(248, 81, 73, 0.1); border: 1px solid #f85149; border-radius: 8px; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #30363d; padding: 1.5rem; flex: none; box-sizing: border-box; }
+            .main-content { padding: 1.5rem 1rem; overflow: visible; }
+            .metrics-row { flex-direction: column; gap: 1rem; }
+            .detail-row { flex-direction: column; gap: 1.5rem; }
+            .hero-header { padding: 1.5rem 1rem; }
+            .hero-header h1 { font-size: 1.6rem; }
+            .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; margin-top: 1rem; margin-bottom: 2rem; border: 1px solid #30363d; }
+            .results-table { min-width: 700px; margin-top: 0; margin-bottom: 0; border: none; }
+        }
+
+        .heading-with-icon { display: flex; align-items: center; gap: 8px; color: #e6edf3; }
+        .table-icons { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 8px; line-height: 1.4; }
+        .table-icons i { margin-top: 2px; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div>
+            <h3><i data-lucide="file-text"></i> Job Description</h3>
+            <textarea id="job-description" rows="10" placeholder="Paste the complete job description here..."></textarea>
+        </div>
+        
+        <hr style="border: 1px solid #30363d; width: 100%;">
+        
+        <div>
+            <h3><i data-lucide="upload-cloud"></i> Upload Resumes</h3>
+            <label class="file-upload">
+                <i data-lucide="file-up" style="color: #8b949e; width: 32px; height: 32px;"></i>
+                <span id="file-label">Click to select PDF files (Max 10)</span>
+                <input type="file" id="resume-files" multiple accept=".pdf" style="display: none;">
+            </label>
+            <div id="file-list-container" style="margin-top: 10px; max-height: 250px; overflow-y: auto;"></div>
+        </div>
+
+        <hr style="border: 1px solid #30363d; width: 100%;">
+
+        <button class="btn-screen" id="btn-screen">
+            <i data-lucide="zap"></i> Screen Resumes
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="hero-header">
+            <h1><i data-lucide="target" style="color: #58a6ff;"></i> <span class="accent">Nutra</span>Hire AI</h1>
+            <p>Upload resumes, paste a job description, and let AI rank your candidates instantly</p>
+        </div>
+        
+        <div id="error-msg"></div>
+
+        <div id="welcome-state" class="welcome-state">
+            <div class="flow-icons">
+                <i data-lucide="file-text" style="width: 48px; height: 48px;"></i>
+                <i data-lucide="arrow-right"></i>
+                <i data-lucide="bot" style="width: 48px; height: 48px;"></i>
+                <i data-lucide="arrow-right"></i>
+                <i data-lucide="bar-chart-2" style="width: 48px; height: 48px;"></i>
+            </div>
+            <h3 style="color: #e6edf3; font-weight: 600;">Ready to Screen Candidates</h3>
+            <p style="max-width: 500px; margin: 0.5rem auto; line-height: 1.6;">
+                1. Paste your <strong style="color: #58a6ff;">Job Description</strong> in the sidebar<br>
+                2. Upload <strong style="color: #58a6ff;">Resume PDFs</strong> (up to 10)<br>
+                3. Click <strong style="color: #58a6ff;">Screen Resumes</strong> and let AI do the work
+            </p>
+        </div>
+
+        <div id="loader" class="loader-container">
+            <div class="spinner"></div>
+            <h3 style="color: #e6edf3; margin-bottom: 0.5rem;">AI is analyzing all candidates...</h3>
+            <p style="color: #8b949e; margin: 0;">This can take 10-20 seconds depending on the number of PDFs.</p>
+        </div>
+
+        <div id="results-container" style="display: none;">
+            <div class="metrics-row" id="metrics-row"></div>
+
+            <!-- Download Button -->
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <button class="btn-screen" id="btn-download-excel" style="width: auto; padding: 0.8rem 2rem; display: none; align-items: center; gap: 8px; background: linear-gradient(135deg, #1f6feb, #388bfd);">
+                    <i data-lucide="download" style="width: 18px; height: 18px;"></i>
+                    Download Excel
+                </button>
+            </div>
+
+            <h3 class="heading-with-icon"><i data-lucide="bar-chart-2"></i> Candidate Rankings</h3>
+            <div class="table-responsive">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Candidate</th>
+                            <th>Score</th>
+                            <th>Strengths</th>
+                            <th>Gaps</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-tbody"></tbody>
+                </table>
+            </div>
+
+            <h3 class="heading-with-icon"><i data-lucide="search"></i> Detailed Analysis</h3>
+            <div id="detail-cards"></div>
+
+            <div class="footer">Built for NutraHire | HTML/JS, Flask & Groq AI</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons for static elements unconditionally
+        lucide.createIcons();
+
+        const fileInput = document.getElementById('resume-files');
+        const fileLabel = document.getElementById('file-label');
+        const btnScreen = document.getElementById('btn-screen');
+        const btnDownloadExcel = document.getElementById('btn-download-excel');
+        const jdInput = document.getElementById('job-description');
+
+        let selectedFiles = [];
+        let lastResults = null;  // Store results for Excel export
+
+        fileInput.addEventListener('change', (e) => {
+            for(let i=0; i<e.target.files.length; i++) {
+                if (selectedFiles.length < 10) {
+                    if(!selectedFiles.some(f => f.name === e.target.files[i].name)) {
+                        selectedFiles.push(e.target.files[i]);
+                    }
+                } else {
+                    alert("Maximum 10 resumes allowed.");
+                    break;
+                }
+            }
+            fileInput.value = ""; 
+            updateFileUI();
+        });
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileUI();
+        }
+
+        function updateFileUI() {
+            const num = selectedFiles.length;
+            const container = document.getElementById('file-list-container');
+            if (num > 0) {
+                fileLabel.innerHTML = `<span style="display:flex;align-items:center;justify-content:center;gap:6px;"><i data-lucide="check-circle-2" style="color:#3fb950;"></i> ${num} file(s) added</span><small style="color:#8b949e;display:block;margin-top:4px;">Click to add more (Max 10)</small>`;
+                
+                container.innerHTML = selectedFiles.map((f, i) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#161b22; padding:8px 12px; margin-top:8px; border-radius:6px; border:1px solid #30363d; font-size:0.85rem;">
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#c9d1d9; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="file" style="width:14px; height:14px;"></i> ${f.name}
+                        </span>
+                        <span style="color:#f85149; cursor:pointer; margin-left:10px; display:flex; align-items:center;" onclick="removeFile(${i})">
+                            <i data-lucide="x" style="width:16px; height:16px;"></i>
+                        </span>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } else {
+                fileLabel.innerHTML = "Click to select PDF files (Max 10)";
+                container.innerHTML = "";
+            }
+        }
+
+        function getScoreClass(score) {
+            if (score >= 80) return "score-high";
+            if (score >= 50) return "score-mid";
+            return "score-low";
+        }
+        function getRecClass(rec) {
+            if (rec === "Strong Fit") return "rec-strong";
+            if (rec === "Moderate Fit") return "rec-moderate";
+            return "rec-not";
+        }
+
+        btnScreen.addEventListener('click', async () => {
+            const formData = new FormData();
+            
+            const jd = jdInput.value.trim();
+            if (!jd) return alert("Please paste a job description.");
+            if (selectedFiles.length === 0) return alert("Please upload at least 1 PDF file.");
+            
+            formData.append("job_description", jd);
+            
+            for(let i=0; i<selectedFiles.length; i++) {
+                formData.append("resumes", selectedFiles[i]);
+            }
+
+            document.getElementById('welcome-state').style.display = 'none';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+
+            try {
+                // Calls either local Flask server (port 5000) or Vercel route
+                const url = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" 
+                            ? "http://127.0.0.1:5000/api/screen" 
+                            : "/api/screen";
+                            
+                const response = await fetch(url, { method: 'POST', body: formData });
+                const data = await response.json();
+                
+                document.getElementById('loader').style.display = 'none';
+
+                if (!response.ok) {
+                    document.getElementById('error-msg').style.display = 'block';
+                    document.getElementById('error-msg').innerText = "Error: " + (data.error || "Unknown server error.");
+                    document.getElementById('welcome-state').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('results-container').style.display = 'block';
+                
+                // Metrics
+                document.getElementById('metrics-row').innerHTML = `
+                    <div class="metric-card"><div class="metric-value">${data.metrics.total}</div><div class="metric-label">Total Candidates</div></div>
+                    <div class="metric-card"><div class="metric-value">${data.metrics.avg_score}</div><div class="metric-label">Avg Score</div></div>
+                    <div class="metric-card"><div class="metric-value">${data.metrics.strong_fits}</div><div class="metric-label">Strong Fits</div></div>
+                    <div class="metric-card"><div class="metric-value">${data.metrics.moderate_fits}</div><div class="metric-label">Moderate Fits</div></div>
+                `;
+
+                // Table
+                const tbody = document.getElementById('results-tbody');
+                tbody.innerHTML = "";
+                data.results.forEach(r => {
+                    const strengthsHtml = r.strengths.map(s => `<div class="table-icons"><i data-lucide="check" style="color:#3fb950;width:14px;height:14px;"></i> <span>${s}</span></div>`).join("");
+                    const gapsHtml = r.gaps.map(g => `<div class="table-icons"><i data-lucide="x" style="color:#f85149;width:14px;height:14px;"></i> <span>${g}</span></div>`).join("");
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td align="center"><span class="rank-num">${r.rank || '-'}</span></td>
+                        <td><strong>${r.candidate_name || r.file_name}</strong></td>
+                        <td align="center"><span class="score-badge ${getScoreClass(r.match_score)}">${r.match_score}</span></td>
+                        <td style="color: #c9d1d9;">${strengthsHtml}</td>
+                        <td style="color: #c9d1d9;">${gapsHtml}</td>
+                        <td align="center"><span class="rec-badge ${getRecClass(r.recommendation)}">${r.recommendation}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Detailed Cards
+                const details = document.getElementById('detail-cards');
+                details.innerHTML = "";
+                data.results.forEach(r => {
+                    const st = r.strengths.map(s => `<li>${s}</li>`).join("");
+                    const gp = r.gaps.map(g => `<li>${g}</li>`).join("");
+                    details.innerHTML += `
+                        <div class="detail-card">
+                            <h3>#${r.rank || '-'} — ${r.candidate_name}
+                                <span class="score-badge ${getScoreClass(r.match_score)}" style="margin-left: 15px; width: 42px; height: 42px; font-size: 0.95rem;">${r.match_score}</span>
+                                <span class="rec-badge ${getRecClass(r.recommendation)}" style="margin-left: 10px;">${r.recommendation}</span>
+                            </h3>
+                            <div class="detail-row">
+                                <div class="detail-col">
+                                    <h4 class="strength-label"><i data-lucide="check-circle-2" style="width:14px;height:14px;"></i> Key Strengths</h4>
+                                    <ul class="strengths">${st}</ul>
+                                </div>
+                                <div class="detail-col">
+                                    <h4 class="gap-label"><i data-lucide="x-circle" style="width:14px;height:14px;"></i> Key Gaps</h4>
+                                    <ul class="gaps">${gp}</ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Render newly injected lucide icons
+                lucide.createIcons();
+
+                // Store results for Excel export
+                lastResults = data;
+                // Show download button
+                document.getElementById('btn-download-excel').style.display = 'inline-flex';
+
+            } catch(e) {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('error-msg').style.display = 'block';
+                document.getElementById('error-msg').innerText = "Network Exception: Is the API server running?";
+                document.getElementById('welcome-state').style.display = 'block';
+            }
+        });
+
+        // Excel Download Handler
+        btnDownloadExcel.addEventListener('click', async () => {
+            if (!lastResults) {
+                alert("No results to export. Please screen resumes first.");
+                return;
+            }
+
+            try {
+                const payload = {
+                    results: lastResults.results,
+                    job_description: jdInput.value.trim()
+                };
+
+                const url = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+                            ? "http://127.0.0.1:5000/api/export"
+                            : "/api/export";
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert("Export failed: " + (errorData.error || "Unknown error"));
+                    return;
+                }
+
+                // Get the blob from the response
+                const blob = await response.blob();
+
+                // Create download link
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+
+                // Extract filename from Content-Disposition header
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'resume_screening_results.xlsx';
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (filenameMatch) {
+                        filename = filenameMatch[1];
+                    }
+                }
+                a.download = filename;
+
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(downloadUrl);
+                document.body.removeChild(a);
+
+            } catch(e) {
+                alert("Download failed: " + e.message);
+            }
+        });
+    </script>
+</body>
+</html>
